@@ -26,11 +26,12 @@ func main() {
 		log.Fatal("Listen TCP error: ", err)
 	}
 
-	conn, err := lis.Accept()
-	if err != nil {
-		log.Fatal("Accept error: ", err)
+	for {
+		conn, err := lis.Accept()
+		if err != nil {
+			log.Fatal("Accept error: ", err)
+		}
+
+		go rpc.ServeConn(conn)
 	}
-
-	rpc.ServeConn(conn)
-
 }
