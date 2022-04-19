@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "/streamservice";
+
+package streamservice;
+
+message RpcRequest {
+    string msg = 1;
+}
+
+message RpcResponse {
+    string msg = 1;
+}
+
+service Communication {
+    rpc Communicate(stream RpcRequest) returns (stream RpcResponse) {};
+}
