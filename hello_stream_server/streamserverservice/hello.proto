@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "/streamserverservice";
+
+package streamserverservice;
+
+message RpcRequest {
+    string name = 1;
+}
+
+message RpcResponse {
+    string stream_value = 1;
+}
+
+service Greeter {
+    rpc SayHello(RpcRequest) returns (stream RpcResponse) {};
+}
