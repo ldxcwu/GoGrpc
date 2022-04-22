@@ -8,6 +8,7 @@ import (
 	pb "streamservice"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/alts"
 )
 
 type CommunicationServer struct {
@@ -21,7 +22,7 @@ func (s *CommunicationServer) Communicate(srv pb.Communication_CommunicateServer
 			break
 		}
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal("Recv error: ", err)
 		}
 		fmt.Printf("req.Msg: %v\n", req.Msg)
 		srv.Send(&pb.RpcResponse{Msg: req.Msg})
@@ -34,7 +35,10 @@ func main() {
 	if err != nil {
 		log.Fatal("lisnten error: ", err)
 	}
-	s := grpc.NewServer()
+	//alts 认证
+	altsTC := alts.NewServerCreds(alts.DefaultServerOptions())
+	s := grpc.NewServer(grpc.Creds(altsTC))
+	// s := grpc.NewServer()
 	pb.RegisterCommunicationServer(s, &CommunicationServer{})
 	err = s.Serve(lis)
 	if err != nil {
