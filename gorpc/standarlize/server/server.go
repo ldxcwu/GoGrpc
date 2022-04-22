@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 	"net/rpc"
+	"net/rpc/jsonrpc"
 	"standarlize"
 )
 
@@ -32,6 +33,11 @@ func main() {
 			log.Fatal("Accept error: ", err)
 		}
 
-		go rpc.ServeConn(conn)
+		// go rpc.ServeConn(conn)
+		// go rpc.ServeCodec(jsonrpc.NewServerCodec(conn))
+		go func() {
+			// io.Copy(os.Stdout, conn)
+			rpc.ServeCodec(jsonrpc.NewServerCodec(conn))
+		}()
 	}
 }
